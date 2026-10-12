@@ -22,7 +22,13 @@
 .web-app .stage{height:100dvh;min-height:650px;position:relative;overflow:hidden;border:0;border-radius:0;box-shadow:none;background:#1a1114;scroll-margin-top:0}
 .web-app #gameCanvas{display:none}
 .web-app .cinematic-scene{position:absolute;inset:0;z-index:0;background-image:url('v800-cinematic-wide.png');background-position:center;background-size:cover;transform:scale(1.005);will-change:transform,filter}
+.web-app .drive-scene{position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .7s ease;pointer-events:none}
+.web-app .drive-scene canvas{display:block;width:100%;height:100%}
+.web-app.drive-ready .drive-scene{opacity:1}
+.web-app.drive-ready .cinematic-scene,.web-app.drive-fallback .cinematic-scene{opacity:0}
+.web-app.drive-fallback #gameCanvas{display:block;z-index:1}
 .web-app .cinematic-motion{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:repeating-linear-gradient(173deg,transparent 0 13px,rgba(255,227,190,.055) 15px 16px,transparent 18px 54px);mix-blend-mode:screen;mask-image:linear-gradient(transparent 55%,black 88%);animation:motionSlide .48s linear infinite}
+.web-app.drive-ready .cinematic-motion,.web-app.drive-fallback .cinematic-motion{display:none}
 .web-app.game-active[data-phase="accelerating"] .cinematic-scene{animation:cameraRun 4.5s ease-in-out infinite alternate}
 .web-app.game-active[data-phase="accelerating"] .cinematic-motion{opacity:.75}
 .web-app.game-active[data-phase="braking"] .cinematic-motion{opacity:.22;animation-duration:1.2s}
@@ -65,7 +71,7 @@
 .web-app .segment.active{background:#f1d09b;color:#1b1511}
 .web-app .mode-hint{font-size:10px;line-height:1.5;color:#b8a9a0;margin:13px 0}
 .web-app .primary-button{background:linear-gradient(180deg,#f7dfaf,#d8ae70);color:#20170e;box-shadow:0 6px 26px rgba(231,187,112,.24)}
-.web-app .quick-key{display:none}
+.web-app .quick-key{display:block;color:#cdb9a7;font-size:10px}
 .web-app .lower-grid,.web-app .howto{max-width:1190px;margin-left:auto;margin-right:auto;padding-left:20px;padding-right:20px}
 .web-app .lower-grid{margin-top:40px}.web-app .howto{margin-top:70px}
 .web-app footer{max-width:1190px;margin:auto;padding:28px 20px}
@@ -88,7 +94,7 @@
   .web-app .force-control{padding:7px;max-width:135px;background:rgba(8,7,9,.56)}
   .web-app .force-heading{font-size:9px}.web-app .force-heading strong{font-size:9px}
   .web-app .speed-number{font-size:49px}.web-app .pedal{width:98px;height:98px}
-  .web-app .control-panel{top:auto;bottom:0;transform:translateX(-50%);width:100%;height:44dvh;max-height:none;padding:14px 17px calc(22px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;border-bottom:0;background:linear-gradient(180deg,rgba(22,17,19,.93),rgba(8,7,10,.97))}
+  .web-app .control-panel{top:auto;bottom:0;transform:translateX(-50%);width:100%;height:36dvh;max-height:none;padding:14px 17px calc(22px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;border-bottom:0;background:linear-gradient(180deg,rgba(22,17,19,.93),rgba(8,7,10,.97))}
   .web-app .cinematic-title{margin-bottom:8px}.web-app .cinematic-title h1{font-size:27px;margin:5px 0}.web-app .cinematic-title p{font-size:10px}
   .web-app .mobile-start{display:block;width:100%;border:0;border-radius:11px;background:linear-gradient(180deg,#f7dfaf,#d8ae70);color:#20170e;padding:12px;font-size:15px;font-weight:800;margin:10px 0}
   .web-app .mode-card{min-height:84px;padding:7px}.web-app .mode-copy strong{font-size:11px}.web-app .mode-copy small{font-size:9px}

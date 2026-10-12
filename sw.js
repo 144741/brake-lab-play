@@ -1,8 +1,11 @@
-const CACHE_NAME = 'brakelab-offline-v7';
+const CACHE_NAME = 'brakelab-offline-v12';
 const FILES = [
-  './', './index.html', './styles.css', './app.js', './site-pwa.js',
+  './', './index.html', './styles.css', './app.js', './scene3d.js', './site-pwa.js',
   './favicon.svg', './manifest.webmanifest', './icon-192.png', './icon-512.png',
-  './v800-cinematic-wide.png', './v800-cinematic-portrait.png'
+  './v800-cinematic-wide.png', './v800-cinematic-portrait.png', './v800-drive-sprite.png',
+  './v800-drive-sky-wide.png', './v800-drive-sky-portrait.png',
+  './assets/vendor/three.core.js', './assets/vendor/three.module.js',
+  './assets/vendor/RoundedBoxGeometry.js'
 ];
 
 self.addEventListener('install', event => {

@@ -299,9 +299,17 @@
     x.fillStyle = '#ffbf86'; x.fillRect(W - 76, 10, 10, 2); x.fillStyle = '#d4e7db'; x.fillText('踏板力', W - 61, 14);
   }
 
-  // All visuals are constructed from Canvas primitives; no network images or fonts are loaded.
+  // The hosted edition renders a live 3D driving view. Canvas remains an offline fallback.
   function drawScene(time) {
-    if (document.body.classList.contains('web-app')) return;
+    if (document.body.classList.contains('web-app') && window.BrakeLabVisual) {
+      window.BrakeLabVisual.update({
+        phase: run.phase, distance: run.distance, speed: run.speed * 3.6,
+        force: run.force, scene: run.config.scene, surface: run.config.surface,
+        totalDistance: MODE[run.config.mode].distance, cause: run.result?.cause,
+        time
+      });
+      return;
+    }
     const c = ui.stage, bounds = c.getBoundingClientRect();
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const W = Math.max(1, Math.round(bounds.width)), H = Math.max(1, Math.round(bounds.height));
@@ -408,6 +416,9 @@
   ui.soundBtn.addEventListener('click', () => { soundOn = !soundOn; syncSound(); if (soundOn) beep(760, .12); });
   ui.brakeBtn.addEventListener('pointerdown', e => { e.preventDefault(); if (ui.brakeBtn.disabled) return; ui.brakeBtn.setPointerCapture?.(e.pointerId); setBrake(true); });
   ui.brakeBtn.addEventListener('pointerup', () => setBrake(false)); ui.brakeBtn.addEventListener('pointercancel', () => setBrake(false));
+  ui.stage.closest('.stage').addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button === 0 && !e.target.closest('button')) setBrake(true);
+  });
   window.addEventListener('pointerup', () => setBrake(false)); window.addEventListener('blur', () => { setBrake(false); if (['countdown', 'accelerating', 'braking'].includes(run.phase)) pauseGame(); });
   window.addEventListener('keydown', e => {
     if (e.code === 'Space') { if (document.activeElement?.tagName !== 'BUTTON') e.preventDefault(); if (!e.repeat) setBrake(true); }

@@ -9,9 +9,10 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
-  <script src="site-pwa.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=drive5">
+  <script src="app.js?v=drive5" defer></script>
+  <script type="module" src="scene3d.js?v=drive5"></script>
+  <script src="site-pwa.js?v=drive5" defer></script>
 </head>
 <body class="web-app">
   <div class="app-shell">
@@ -57,7 +58,7 @@
           <p class="quick-key">空格 / 按住右下角踏板制动　·　P 暂停　·　R 重开</p>
         </aside>
 
-        <section class="stage panel" aria-label="比赛场景"><div class="cinematic-scene" aria-hidden="true"></div><div class="cinematic-motion" aria-hidden="true"></div>
+        <section class="stage panel" aria-label="比赛场景"><div class="cinematic-scene" aria-hidden="true"></div><div class="cinematic-motion" aria-hidden="true"></div><div class="drive-scene" id="driveScene" aria-hidden="true"></div>
           <canvas id="gameCanvas" aria-label="公路、车辆和前方目标的动态画面"></canvas>
           <div class="stage-vignette" aria-hidden="true"></div>
           <div class="stage-top">
