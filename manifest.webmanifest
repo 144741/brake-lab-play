@@ -1,0 +1,25 @@
+{
+  "name": "刹车实验场 · 离线挑战",
+  "short_name": "刹车实验场",
+  "description": "离线可玩的刹车挑战：极限挑战、精准停车与自由练习。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a080a",
+  "theme_color": "#0a080a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

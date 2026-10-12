@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a080a">
+  <meta name="description" content="离线可玩的极限刹车挑战：经典、精准停车与练习模式。">
+  <title>刹车实验场 · V800 视觉版</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+  <script src="site-pwa.js" defer></script>
+</head>
+<body class="web-app">
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="刹车实验场">
+        <span class="brand-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+        <div><strong>BRAKE<span class="brand-accent">/</span>LAB</strong><small>刹车实验场</small></div>
+      </div>
+      <div class="topbar-right"><button class="icon-button site-settings" id="settingsBtn" type="button" aria-label="打开玩法设置">设置</button>
+        <span class="offline-pill"><span class="status-dot"></span><span id="offlineStatus">正在准备离线版</span></span>
+        <button class="icon-button" id="soundBtn" type="button" title="开启或关闭音效 (M)" aria-label="音效：关" aria-pressed="false">音效 <b id="soundLabel">关</b></button>
+        <button class="icon-button" id="pauseBtn" type="button" title="暂停或继续 (P)" disabled>暂停 <kbd>P</kbd></button>
+      </div>
+    </header>
+
+    <main>
+      <div class="intro-line"><span class="eyebrow">ONE PEDAL. ONE DECISION.</span><span class="intro-rule"></span><span class="version">OFFLINE EDITION / 01</span></div>
+      <div class="heading-row"><div><h1>每一脚，<em>都算数。</em></h1><p class="lead">自动加速，判断时机，按住刹车。力度过猛会断，松得太早又停不下来。</p></div><div class="heading-note">速度越快，得分越高。<br>但终点只有一次。</div></div>
+
+      <div class="game-layout">
+        <aside class="control-panel panel"><div class="cinematic-title"><small>ONE PEDAL. ONE DECISION.</small><h1>极限刹车挑战</h1><p>自动加速，判断时机，路障前稳稳停下。</p><span class="concept-note">尊界 V800 风格概念渲染 · 非官方游戏</span></div><button type="button" class="mobile-start" id="mobileStartBtn">开始挑战 ↗</button>
+          <div class="panel-kicker"><span>01 / 赛道配置</span><span class="live-spark"></span></div>
+          <h2>选择玩法</h2>
+          <div class="mode-list" role="group" aria-label="玩法模式">
+            <button type="button" class="mode-card active" data-mode="classic" aria-pressed="true"><span class="mode-number">01</span><span class="mode-copy"><strong>极限挑战</strong><small>沿用原站核心规则，路障前刹停</small></span><span class="mode-arrow">↗</span></button>
+            <button type="button" class="mode-card" data-mode="precision" aria-pressed="false"><span class="mode-number">02</span><span class="mode-copy"><strong>精准停车</strong><small>停进目标区，考验力度与距离</small></span><span class="mode-arrow">↗</span></button>
+            <button type="button" class="mode-card" data-mode="practice" aria-pressed="false"><span class="mode-number">03</span><span class="mode-copy"><strong>自由练习</strong><small>不限踏板力度，显示停车预测</small></span><span class="mode-arrow">↗</span></button>
+          </div>
+
+          <div class="subsection-label">场景环境</div>
+          <div class="segmented" role="group" aria-label="场景">
+            <button type="button" class="segment active" data-scene="dusk" aria-pressed="true">晚霞</button>
+            <button type="button" class="segment" data-scene="day" aria-pressed="false">晴昼</button>
+            <button type="button" class="segment" data-scene="night" aria-pressed="false">夜行</button>
+          </div>
+          <div class="subsection-label">路面条件</div>
+          <div class="segmented" role="group" aria-label="路面条件">
+            <button type="button" class="segment active" data-surface="dry" aria-pressed="true">干燥</button>
+            <button type="button" class="segment" data-surface="wet" aria-pressed="false">湿滑 · 制动力降低</button>
+          </div>
+          <p class="mode-hint" id="modeHint">超过 100 km/h 才能制动。踏板力度达到 1612 N 即失败；路障前停住，按初速度² ÷ 刹停用时计分。</p>
+          <button type="button" class="primary-button" id="startBtn"><span>开始挑战</span><span class="button-icon">↗</span></button>
+          <p class="quick-key">空格 / 按住右下角踏板制动　·　P 暂停　·　R 重开</p>
+        </aside>
+
+        <section class="stage panel" aria-label="比赛场景"><div class="cinematic-scene" aria-hidden="true"></div><div class="cinematic-motion" aria-hidden="true"></div>
+          <canvas id="gameCanvas" aria-label="公路、车辆和前方目标的动态画面"></canvas>
+          <div class="stage-vignette" aria-hidden="true"></div>
+          <div class="stage-top">
+            <div class="stage-label"><span class="stage-indicator"></span><span id="stageTag">待命 · 极限挑战</span></div>
+            <div class="stage-chips"><span id="sceneChip">晚霞</span><span id="surfaceChip">干燥路面</span></div>
+          </div>
+          <div class="top-metrics">
+            <div class="metric-tile"><span id="timerLabel">比赛计时</span><strong id="timeValue">0.000<span>s</span></strong></div>
+            <div class="metric-tile right"><span id="distanceLabel">距路障</span><strong id="distanceValue">2597<span>m</span></strong></div>
+          </div>
+          <div class="forecast-pill" id="forecastPill" hidden><span>预计停车点</span><strong id="forecastValue">—</strong></div>
+          <div class="stage-center" id="stageCenter"><span class="center-cross" aria-hidden="true">✦</span><strong>准备好了吗？</strong><small>选择模式，然后开始挑战</small><button type="button" class="stage-setup" id="stageSetupBtn">选择玩法 ↗</button></div>
+          <div class="stage-bottom">
+            <div class="force-control"><div class="force-heading"><span>踏板力度</span><strong><span id="forceValue">0</span> / 1612 N</strong></div><div class="force-track"><div id="forceFill"></div><span class="force-limit"></span></div><small id="forceState">松开踏板</small></div>
+            <div class="speed-readout"><div class="speed-number" id="speedValue">0</div><span>KM/H</span><div class="speed-line"></div></div>
+            <button type="button" class="pedal" id="brakeBtn" disabled aria-label="按住刹车"><span class="pedal-bars" aria-hidden="true">▥</span><strong>按住刹车</strong><small>SPACE / TOUCH</small></button>
+          </div>
+          <div class="stage-progress" aria-hidden="true"><div id="progressFill"></div></div>
+        </section>
+      </div>
+
+      <section class="lower-grid">
+        <div class="info-panel panel"><div class="section-top"><span class="panel-kicker">02 / 实时记录</span><span class="small-label">当前设备</span></div><div class="stats-grid"><div><span>最高分 · 当前模式</span><strong id="bestScore">—</strong></div><div><span>累计尝试</span><strong id="totalRuns">0</strong></div><div><span>本次初速度</span><strong id="initialSpeed">—</strong></div><div><span>本次制动距离</span><strong id="brakeDistance">—</strong></div></div></div>
+        <div class="info-panel panel"><div class="section-top"><span class="panel-kicker">03 / 最近成绩</span><div><button class="text-button" id="exportBtn" type="button">导出 CSV</button><button class="text-button danger-text" id="clearBtn" type="button">清空</button></div></div><div id="historyList" class="history-list"><p class="empty-history">还没有记录，完成第一次挑战吧。</p></div></div>
+      </section>
+
+      <section class="howto"><div><span class="eyebrow">HOW IT WORKS</span><h2>踩得聪明，<br>比踩得用力更重要。</h2></div><div class="howto-steps"><div><span>01</span><p>车辆会自行加速。达到 <b>100 km/h</b> 后，刹车才解锁。</p></div><div><span>02</span><p>第一次踩下就会切断动力。按住加力，松开后力度逐渐回落。</p></div><div><span>03</span><p>根据速度、前方距离和踏板力度反复调整。成绩仅保存在你的浏览器。</p></div></div></section>
+    </main>
+    <footer><span>BRAKE/LAB · 独立离线体验</span><span>游戏资源可缓存到本机；首次打开需要联网。车辆画面为原创概念渲染，非品牌官方作品。</span></footer>
+  </div>
+
+  <div class="modal-backdrop" id="resultModal" hidden>
+    <div class="result-modal panel" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+      <div class="result-header"><span class="eyebrow">RUN COMPLETE / 结算</span><button type="button" class="close-button" id="closeResultBtn" aria-label="关闭结果">×</button></div>
+      <div class="result-heading"><div><div class="result-icon" id="resultIcon">✓</div><h2 id="resultTitle">挑战完成</h2><p id="resultMessage">很棒的一脚。</p></div><div class="result-score"><span>本次得分</span><strong id="resultScore">0</strong></div></div>
+      <div class="result-metrics"><div><span>初速度</span><strong id="resultInitial">—</strong></div><div><span>刹停用时</span><strong id="resultTime">—</strong></div><div><span>制动距离</span><strong id="resultDistance">—</strong></div><div><span>最大踏板力</span><strong id="resultForce">—</strong></div></div>
+      <div class="chart-head"><span>制动过程</span><small>车速 / 踏板力</small></div><canvas id="resultChart" width="600" height="120" aria-label="本次制动的车速和踏板力度曲线"></canvas>
+      <div class="result-actions"><button type="button" class="secondary-button" id="resultCloseBtn">返回设置</button><button type="button" class="primary-button" id="retryBtn"><span>再来一次</span><span class="button-icon">↗</span></button></div>
+    </div>
+  </div>
+  <div id="announcer" class="sr-only" aria-live="polite"></div>
+</body>
+</html>
